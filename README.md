@@ -1,7 +1,6 @@
-# kubernetes_logging
-## How to setup logging on Kubernetes using EFK (Elasticsearch, Fluentd and Kibana)
+# How to setup logging on Kubernetes using EFK (Elasticsearch, Fluentd and Kibana)
 
-### Install Elasticsearch (a statefulSet) and Kibana (a deployment):
+## Install Elasticsearch (a statefulSet) and Kibana (a deployment):
 
 In the Kibana deployment yaml file, I swapped http://elasticsearch:9200 with http://elasticsearch.namespace.svc.cluster.local:9200 (actually this isn't necessary as Kibana and Elasticsearch are in the same namespace).
 For Kibana I used internal service and ingress instead of the nodePort yaml file provided.
@@ -14,7 +13,7 @@ kubectl apply -n logging -f kubernetes-efk/kibana/kibana-svc-internal.yaml
 
 ### Use Ingress to make Kibana accessible publicly 
 
-### Install Fluentd (a daemonSet):
+## Install Fluentd (a daemonSet):
 In the values.yaml file, search for 'elasticsearch-master' (this appears twice) and replace it with 'elasticsearch'. Using 'elasticsearch' as host is based on the assumption that your elasticsearch internal service is deployed in the same namespace as that you want to install Fluentd in. Else use the elasticsearch's internal service DNS url.
 In the values.yaml file, also change 'keep_time_key' from 'false' to 'true' in the parser block. This block is found in the fileConfigs section of the file. If this is not done, you can't filter logs with a time range in Kibana.
 
