@@ -36,6 +36,7 @@ Also in Step 4, select “time” in the Time Filter field name option.
 
 You can filter logs of pods using namespace, label metadata, container metadata, pod metadata, host(node) etc.
 Example of Kibana query (KQL) using pod label:
+
 kubernetes.labels.app.keyword: "aaasapigatewayinternal" 
 
 You can query for logs, save a query search result and share the result (which saves the search result as a csv file).
