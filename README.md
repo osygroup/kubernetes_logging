@@ -5,18 +5,20 @@ Create a namespaced nammed 'logging' or any name of choice:
 
 kubectl create namespace logging
 
-## Install Elasticsearch (a statefulSet) and Kibana (a deployment):
+## Install Elasticsearch (a statefulSet):
 
 In the Kibana deployment yaml file, I swapped http://elasticsearch:9200 with http://elasticsearch.namespace.svc.cluster.local:9200 (actually this isn't necessary as Kibana and Elasticsearch are in the same namespace).
 For Kibana I used internal service and ingress instead of the nodePort yaml file provided.
 
-kubectl apply -n logging -f kubernetes-efk/elasticsearch/es-svc.yaml
+kubectl apply -n logging -f elasticsearch/es-svc.yaml
 
-kubectl apply -n logging -f kubernetes-efk/elasticsearch/es-sts.yaml
+kubectl apply -n logging -f elasticsearch/es-sts.yaml
 
-kubectl apply -n logging -f kubernetes-efk/kibana/kibana-deployment.yaml
+## Install Kibana (a deployment):
 
-kubectl apply -n logging -f kubernetes-efk/kibana/kibana-svc-internal.yaml
+kubectl apply -n logging -f kibana/kibana-deployment.yaml
+
+kubectl apply -n logging -f kibana/kibana-svc-internal.yaml
 
 ### Use Ingress to make Kibana accessible publicly 
 
