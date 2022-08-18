@@ -1,7 +1,7 @@
 # How to setup logging on Kubernetes using EFK (Elasticsearch, Fluentd and Kibana)
 
 ## Create a namespace for all the resources needed
-Create a namespaced nammed 'logging' or any name of choice:
+Create a namespace named 'logging' or any name of choice:
 
 kubectl create namespace logging
 
