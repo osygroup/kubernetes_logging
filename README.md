@@ -31,7 +31,7 @@ helm upgrade --install fluentd fluentd -n logging
 To view sources of data for elasticsearch (e.g fluentd, fluentbit etc.), you can port-forward the elasticsearch internal service:
 http://elasticsearch_service:9200/_cat/indices?v
 
-Steps to query logs with kibana are in the [Devopscube documentation](https://devopscube.com/setup-efk-stack-on-kubernetes), but in Step 3, create a new Index Patten using the pattern – “fluentd” (as seen in http://elasticsearch_service:9200/_cat/indices?v).
+Steps to query logs with kibana are in this [documentation](https://devopscube.com/setup-efk-stack-on-kubernetes), but in Step 3, create a new Index Patten using the pattern – “fluentd” (as seen in http://elasticsearch_service:9200/_cat/indices?v).
 Also in Step 4, select “time” in the Time Filter field name option.
 
 You can filter logs of pods using namespace, label metadata, container metadata, pod metadata, host(node) etc.
