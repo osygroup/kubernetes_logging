@@ -1,14 +1,21 @@
 # How to setup logging on Kubernetes using EFK (Elasticsearch, Fluentd and Kibana)
 
+# Create a namespace for all the resources needed
+Create a namespaced nammed 'logging' or any name of choice:
+
+kubectl create namespace logging
+
 ## Install Elasticsearch (a statefulSet) and Kibana (a deployment):
 
 In the Kibana deployment yaml file, I swapped http://elasticsearch:9200 with http://elasticsearch.namespace.svc.cluster.local:9200 (actually this isn't necessary as Kibana and Elasticsearch are in the same namespace).
 For Kibana I used internal service and ingress instead of the nodePort yaml file provided.
 
-kubectl create namespace logging
 kubectl apply -n logging -f kubernetes-efk/elasticsearch/es-svc.yaml
+
 kubectl apply -n logging -f kubernetes-efk/elasticsearch/es-sts.yaml
+
 kubectl apply -n logging -f kubernetes-efk/kibana/kibana-deployment.yaml
+
 kubectl apply -n logging -f kubernetes-efk/kibana/kibana-svc-internal.yaml
 
 ### Use Ingress to make Kibana accessible publicly 
