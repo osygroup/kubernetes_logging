@@ -73,4 +73,4 @@ spec:
       # storageClassName: ""
       resources:
         requests:
-          storage: 6Gi
+          storage: 50Gi
