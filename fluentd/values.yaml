@@ -163,6 +163,11 @@ updateStrategy: {}
 env:
 - name: "FLUENTD_CONF"
   value: "../../../etc/fluent/fluent.conf"
+- name: FLUENT_ELASTICSEARCH_PASSWORD # even if not used they are necessary
+  valueFrom:
+    secretKeyRef:
+      name: elasticsearch-pw-elastic
+      key: password
   # - name: FLUENT_ELASTICSEARCH_HOST
   #   value: "elasticsearch"
   # - name: FLUENT_ELASTICSEARCH_PORT
@@ -384,7 +389,7 @@ fileConfigs:
         port 9200
         path ""
         user elastic
-        password changeme
+        password "#{ENV['FLUENT_ELASTICSEARCH_PASSWORD']}"
         logstash_format true
         logstash_prefix logstash
       </match>
