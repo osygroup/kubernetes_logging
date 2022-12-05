@@ -10,6 +10,8 @@ kubectl create namespace logging
 In the Kibana deployment yaml file, I swapped http://elasticsearch:9200 with http://elasticsearch.namespace.svc.cluster.local:9200 (actually this isn't necessary as Kibana and Elasticsearch are in the same namespace).
 For Kibana I used internal service and ingress instead of the nodePort yaml file provided.
 
+kubectl apply -n logging -f elasticsearch/es-configmap.yaml
+
 kubectl apply -n logging -f elasticsearch/es-svc.yaml
 
 kubectl apply -n logging -f elasticsearch/es-sts.yaml
