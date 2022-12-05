@@ -5,16 +5,13 @@ Create a namespace named 'logging' or any name of choice:
 
 kubectl create namespace logging
 
-## Install Elasticsearch (a statefulSet):
+## Install Elasticsearch:  
+cd into elasticsearch directory  
 
-In the Kibana deployment yaml file, I swapped http://elasticsearch:9200 with http://elasticsearch.namespace.svc.cluster.local:9200 (actually this isn't necessary as Kibana and Elasticsearch are in the same namespace).
-For Kibana I used internal service and ingress instead of the nodePort yaml file provided.
-
-kubectl apply -n logging -f elasticsearch/es-configmap.yaml
-
-kubectl apply -n logging -f elasticsearch/es-svc.yaml
-
-kubectl apply -n logging -f elasticsearch/es-sts.yaml
+Setup the ElasticSearch master node:  
+kubectl apply  -f elasticsearch-master-configmap.yaml \
+-f elasticsearch-master-service.yaml \
+-f elasticsearch-master-deployment.yaml
 
 ### Setup username and password
 
@@ -43,7 +40,7 @@ helm upgrade --install fluentd fluentd -n logging
 To view sources of data for elasticsearch (e.g fluentd, fluentbit etc.), you can port-forward the elasticsearch internal service:
 http://elasticsearch_service:9200/_cat/indices?v
 
-Steps to query logs with kibana are in this [documentation](https://devopscube.com/setup-efk-stack-on-kubernetes), but in Step 3, create a new Index Patten using the pattern – “fluentd” (as seen in http://elasticsearch_service:9200/_cat/indices?v).
+Steps to query logs with kibana are in this [documentation](https://devopscube.com/setup-efk-stack-on-kubernetes), but in Step 3, create a new Index Patten using the pattern – “logstash-*” (as seen in http://elasticsearch_service:9200/_cat/indices?v).
 Also in Step 4, select “time” in the Time Filter field name option.
 
 You can filter logs of pods using namespace, label metadata, container metadata, pod metadata, host(node) etc.
