@@ -20,10 +20,10 @@ kubectl apply -n logging -f elasticsearch/es-sts.yaml
 
 Exec into the shell of es-cluster-0 pod.
 
-To manually create passwords for all the Elasticsearch accounts (including account 'elastic'):  
+To manually create passwords for all the Elasticsearch accounts (including account 'elastic'), run this command in the shell:  
 bin/elasticsearch-setup-passwords interactive
 
-To autogenerate passwords for all the Elasticsearch accounts (including account 'elastic'):  
+To autogenerate passwords for all the Elasticsearch accounts (including account 'elastic'), run this command in the shell:  
 bin/elasticsearch-setup-passwords auto -b
 
 ## Install Kibana (a deployment):
