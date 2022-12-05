@@ -12,29 +12,48 @@ Setup the ElasticSearch master node:
 
 kubectl apply  -f elasticsearch-master-configmap.yaml \  
 -f elasticsearch-master-service.yaml \  
--f elasticsearch-master-deployment.yaml
+-f elasticsearch-master-deployment.yaml  
 
-### Setup username and password
+Setup the ElasticSearch data node:  
 
-Exec into the shell of es-cluster-0 pod.
+kubectl apply -f elasticsearch-data-configmap.yaml \  
+-f elasticsearch-data-service.yaml \  
+-f elasticsearch-data-statefulset.yaml  
+
+Setup the ElasticSearch client node:  
+kubectl apply  -f elasticsearch-client-configmap.yaml \  
+-f elasticsearch-client-service.yaml \   
+-f elasticsearch-client-deployment.yaml
+
+
+### Generate a password and store in a k8s secret:
+
+We have enabled the xpack security module to secure the cluster, now execute the command to initialize the passwords: bin/elasticsearch-setup-passwords within the client node container (any node would work) to generate default users and passwords.  
 
 To manually create passwords for all the Elasticsearch accounts (including account 'elastic'), run this command in the shell:  
-bin/elasticsearch-setup-passwords interactive
+kubectl exec -it $(kubectl get pods -n logging | grep elasticsearch-client | sed -n 1p | awk '{print $1}') -n logging -- bin/elasticsearch-setup-passwords interactive
 
 To autogenerate passwords for all the Elasticsearch accounts (including account 'elastic'), run this command in the shell:  
-bin/elasticsearch-setup-passwords auto -b
+kubectl exec -it $(kubectl get pods -n logging | grep elasticsearch-client | sed -n 1p | awk '{print $1}') -n logging -- bin/elasticsearch-setup-passwords auto -b  
 
-## Install Kibana (a deployment):
+Note the elastic user password and add it into a k8s secret like this:  
 
-kubectl apply -n logging -f kibana/kibana-deployment.yaml
+kubectl create secret generic elasticsearch-pw-elastic -n logging --from-literal password=ArKsypD2Z2isKLz52wPe
 
-kubectl apply -n logging -f kibana/kibana-svc-internal.yaml
+## Install Kibana:
+
+cd into the directory kibana and run the following command:  
+
+$ kubectl apply  -f kibana-configmap.yaml \  
+-f kibana-service.yaml \  
+-f kibana-deployment.yaml
 
 ### Use Ingress to make Kibana accessible publicly 
 
 ## Install Fluentd (a daemonSet):
-In the values.yaml file, search for 'elasticsearch-master' (this appears twice) and replace it with 'elasticsearch'. Using 'elasticsearch' as host is based on the assumption that your elasticsearch internal service is deployed in the same namespace as that you want to install Fluentd in. Else use the elasticsearch's internal service DNS url.
-In the values.yaml file, also change 'keep_time_key' from 'false' to 'true' in the parser block. This block is found in the fileConfigs section of the file. If this is not done, you can't filter logs with a time range in Kibana.
+I made some modifications to the official Fluentd helm chart to enable filtering of logs with a time range in Kibana and also to enable the creation of daily indices (like in ELK on VMs) so that you can delete old logs (indices) based on age.  
+
+cd back to the kubernetes_logging directory and install the Fluentd helm chart:  
 
 helm upgrade --install fluentd fluentd -n logging
 
