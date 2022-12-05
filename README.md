@@ -5,7 +5,7 @@ Create a namespace named 'logging' or any name of choice:
 
 kubectl create namespace logging
 
-## Install Elasticsearch:  
+## Install Elasticsearch (with X-pack security):  
 cd into elasticsearch directory  
 
 Setup the ElasticSearch master node:  
