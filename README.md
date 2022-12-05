@@ -9,8 +9,9 @@ kubectl create namespace logging
 cd into elasticsearch directory  
 
 Setup the ElasticSearch master node:  
-kubectl apply  -f elasticsearch-master-configmap.yaml \
--f elasticsearch-master-service.yaml \
+
+kubectl apply  -f elasticsearch-master-configmap.yaml \  
+-f elasticsearch-master-service.yaml \  
 -f elasticsearch-master-deployment.yaml
 
 ### Setup username and password
