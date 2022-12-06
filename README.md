@@ -68,4 +68,11 @@ Example of Kibana query (KQL) using pod label:
 
 kubernetes.labels.app.keyword: "aaasapigatewayinternal" 
 
-You can query for logs, save a query search result and share the result (which saves the search result as a csv file).
+You can query for logs, save a query search result and share the result (which saves the search result as a csv file).  
+
+
+
+## Install Curator:  
+Curator is installed to help automatically delete old Fluentd logs (indices) based on age, using a cronjob. The curator directory is a modified helm chart of the official elasticsearch-curator chart on ArtifactHUB. The modifications were made on the values.yaml file to connect to our elasticsearch stack and delete Fluentd indices (logstash-*) that are over 7 days old. This is done to manage storage as Fluentd generates logs of logs daily, depending on the amount of pods running in the cluster.
+
+Create
