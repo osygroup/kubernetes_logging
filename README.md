@@ -51,7 +51,9 @@ $ kubectl apply  -f kibana-configmap.yaml \
 ### Use Ingress to make Kibana accessible publicly 
 
 ## Install Fluentd:
-I made some modifications to the official Fluentd helm chart to enable filtering of logs with a time range in Kibana and also to enable the creation of daily indices (like in ELK on VMs) so that you can delete old logs (indices) based on age.  
+I made some modifications to the official Fluentd helm chart to enable filtering of logs with a time range in Kibana and also to enable the creation of daily indices (like in ELK on VMs) so that you can delete old logs (indices) based on age. 
+
+NOTE: For k8s clusters of 1.25+, I changed "podSecurityPolicy: enabled" to "true" from "false" in the values.yaml file. This is because "PodSecurityPolicy - policy/v1beta1" resource was removed from 1.25 upwards.
 
 cd back to the kubernetes_logging directory and install the Fluentd helm chart:  
 
