@@ -25,6 +25,9 @@ kubectl apply  -f elasticsearch-client-configmap.yaml \
 -f elasticsearch-client-service.yaml \   
 -f elasticsearch-client-deployment.yaml
 
+NOTE: The above k8s deployment and statefulset files are for a single-node cluster. If you deploy this in a multiple-node cluster the master, data, and client pods may end up in different nodes and they will not be able to communicate effectively. Errors such as 'master_not_discovered_exception' may show up.
+
+For multiple-node cluster, use the files suffixed with "-node-affinity". Node affinity will force the deployments and statefulset to be deployed in a particular node (as seen in these k8s manifests). Look for a label that is unique to a particular reliable node you want Elasticsearch installed in, and replace them with what is in the "-node-affinity" suffixed k8s files.
 
 ### Generate a password and store in a k8s secret:
 
