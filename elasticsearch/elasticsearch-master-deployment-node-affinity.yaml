@@ -27,6 +27,7 @@ spec:
                 operator: In
                 values:
                 - aks-agentpool-24807692-vmss00000b
+      priorityClassName: system-node-critical
       containers:
       - name: elasticsearch-master
         image: docker.elastic.co/elasticsearch/elasticsearch:7.3.0
