@@ -27,11 +27,11 @@ spec:
               - key: kubernetes.io/hostname
                 operator: In
                 values:
-                - aks-agentpool2-32723399-vmss000000      
+                - aks-agentpool-37764063-vmss00004c      
       priorityClassName: system-node-critical
       containers:
       - name: elasticsearch-data
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.3.0
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.11.0
         env:
         - name: CLUSTER_NAME
           value: elasticsearch
