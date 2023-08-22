@@ -85,6 +85,7 @@ kubectl create namespace curator
 
 Install the Curator helm chart:  
 
-helm upgrade --install curator curator -n curator     
+helm upgrade --install curator curator -n curator  OR
+helm upgrade --install curator ./curator -n curator 
 
 The cron job will run as per set in the values.yaml file of the chart, deleting the old Fluentd indices.
