@@ -22,6 +22,9 @@ To install the chart, use the following:
 ```console
 $ helm repo add lebenitza https://lebenitza.github.io/charts
 $ helm install elasticsearch-curator lebenitza/elasticsearch-curator
+
+To install my chart:
+$ helm upgrade --install curator ./curator -n curator 
 ```
 
 ## Upgrading an existing Release to a new major version
