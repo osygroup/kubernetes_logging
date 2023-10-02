@@ -41,7 +41,7 @@ kubectl exec -it $(kubectl get pods -n logging | grep elasticsearch-client | sed
 
 Note the elastic user password and add it into a k8s secret like this:  
 
-kubectl create secret generic elasticsearch-pw-elastic -n logging --from-literal password=ArKsypD2Z2isKLz52wPe
+kubectl create secret generic elasticsearch-pw-elastic -n logging --from-literal password=<secret_value_not_base64_value>
 
 ## Install Kibana:
 
@@ -79,13 +79,11 @@ You can query for logs, save a query search result and share the result (which s
 ## Install Curator:  
 Curator is installed to help automatically delete old Fluentd logs (indices) based on age, using a cronjob. The curator directory is a modified helm chart of the official elasticsearch-curator chart on ArtifactHUB. The modifications were made on the values.yaml file to connect to our elasticsearch stack and delete Fluentd indices (logstash-*_) that are over 7 days old. This is done to manage storage as Fluentd generates logs of logs daily, depending on the amount of pods running in the cluster.
 
-Because the daily jobs to delete old indices will not be removed automatically after it runs, we create a new namespace so that the pods that each daily run creates will not be mixed up with our other pods.  
-
-kubectl create namespace curator  
+Because the daily jobs to delete old indices will not be removed automatically after it runs, we create a new namespace so that the pods that each daily run creates will not be mixed up with our other pods.   
 
 Install the Curator helm chart:  
 
-helm upgrade --install curator curator -n curator  OR
-helm upgrade --install curator ./curator -n curator 
+helm upgrade --install curator curator -n logging  OR
+helm upgrade --install curator ./curator -n logging 
 
 The cron job will run as per set in the values.yaml file of the chart, deleting the old Fluentd indices.
