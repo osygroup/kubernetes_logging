@@ -27,7 +27,7 @@ spec:
               - key: kubernetes.io/hostname
                 operator: In
                 values:
-                - aks-agentpool2-32050161-vmss000000     
+                - aks-agentpool2-38968073-vmss000001     
       priorityClassName: system-node-critical
       containers:
       - name: elasticsearch-data
