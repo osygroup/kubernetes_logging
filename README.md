@@ -31,13 +31,13 @@ For multiple-node cluster, use the files suffixed with "-node-affinity". Node af
 
 ### Generate a password and store in a k8s secret:
 
-We have enabled the xpack security module to secure the cluster, now execute the command to initialize the passwords: bin/elasticsearch-setup-passwords within the client node container (any node would work) to generate default users and passwords.  
+We have enabled the xpack security module to secure the cluster, now execute the command to initialize the passwords: bin/elasticsearch-setup-passwords within the data node container (any node would work, but I prefer data node, so that the passwords setup will save in its PV?) to generate default users and passwords.  
 
 To manually create passwords for all the Elasticsearch accounts (including account 'elastic'), run this command in the shell:  
-kubectl exec -it $(kubectl get pods -n logging | grep elasticsearch-client | sed -n 1p | awk '{print $1}') -n logging -- bin/elasticsearch-setup-passwords interactive
+kubectl exec -it $(kubectl get pods -n logging | grep elasticsearch-data | sed -n 1p | awk '{print $1}') -n logging -- bin/elasticsearch-setup-passwords interactive
 
 To autogenerate passwords for all the Elasticsearch accounts (including account 'elastic'), run this command in the shell:  
-kubectl exec -it $(kubectl get pods -n logging | grep elasticsearch-client | sed -n 1p | awk '{print $1}') -n logging -- bin/elasticsearch-setup-passwords auto -b  
+kubectl exec -it $(kubectl get pods -n logging | grep elasticsearch-data | sed -n 1p | awk '{print $1}') -n logging -- bin/elasticsearch-setup-passwords auto -b  
 
 Note the elastic user password and add it into a k8s secret like this:  
 
