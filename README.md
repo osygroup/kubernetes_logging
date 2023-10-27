@@ -56,7 +56,7 @@ $ kubectl apply  -f kibana-configmap.yaml \
 ## Install Fluentd:
 I made some modifications to the official Fluentd helm chart to enable filtering of logs with a time range in Kibana and also to enable the creation of daily indices (like in ELK on VMs) so that you can delete old logs (indices) based on age. 
 
-NOTE: For k8s clusters of v1.25+, I changed "podSecurityPolicy: enabled" to "true" from "false" in the values.yaml file. This is because "PodSecurityPolicy - policy/v1beta1" resource was removed from 1.25 upwards.
+NOTE: For k8s clusters of v1.25+, I changed "podSecurityPolicy: enabled" to "true" from "false" in the values.yaml file. This is because "PodSecurityPolicy - policy/v1beta1" resource was removed from 1.25 upwards. Please chech the [official Fluentd helm chart](https://github.com/fluent/helm-charts/tree/e36eec9eb85bf875e178eeb51f19170ad58216c2/charts/fluentd) for new updates.
 
 cd back to the kubernetes_logging directory and install the Fluentd helm chart:  
 
