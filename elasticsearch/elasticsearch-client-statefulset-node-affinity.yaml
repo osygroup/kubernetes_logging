@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   namespace: logging
   name: elasticsearch-client
@@ -7,6 +7,7 @@ metadata:
     app: elasticsearch
     role: client
 spec:
+  serviceName: "elasticsearch-client"
   replicas: 1
   selector:
     matchLabels:
@@ -26,11 +27,13 @@ spec:
               - key: kubernetes.io/hostname
                 operator: In
                 values:
-                - aks-nodepool2-24734941-vmss000000
+                - aks-agentpool2-38968073-vmss000001
       priorityClassName: system-node-critical
+      securityContext:
+        fsGroup: 1000
       containers:
       - name: elasticsearch-client
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.11.0
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.7.0
         env:
         - name: CLUSTER_NAME
           value: elasticsearch
@@ -41,7 +44,7 @@ spec:
         - name: MASTER_NODES
           value: elasticsearch-master
         - name: "ES_JAVA_OPTS"
-          value: "-Xms256m -Xmx256m"
+          value: "-Xms512m -Xmx512m"
         ports:
         - containerPort: 9200
           name: client
@@ -52,18 +55,34 @@ spec:
           mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
           readOnly: true
           subPath: elasticsearch.yml
-        - name: storage
-          mountPath: /data
+        - name: elasticsearch-client-persistent-storage
+          mountPath: /usr/share/elasticsearch/data
+        - name: elastic-certificates
+          mountPath: /usr/share/elasticsearch/config/elastic-certificates.p12
+          readOnly: true
+          subPath: elastic-certificates.p12
       volumes:
       - name: config
         configMap:
           name: elasticsearch-client-config
-      - name: "storage"
-        emptyDir:
-          medium: ""
+      - name: elastic-certificates
+        secret:
+          secretName: elastic-certificates-p12
       initContainers:
       - name: increase-vm-max-map
         image: busybox
         command: ["sysctl", "-w", "vm.max_map_count=262144"]
         securityContext:
           privileged: true
+  volumeClaimTemplates:
+  - metadata:
+      name: elasticsearch-client-persistent-storage
+      #annotations:
+        #volume.beta.kubernetes.io/storage-class: "gp2"
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      #storageClassName: standard
+      #storageClassName: azureblob-nfs-standard #azureblob-nfs-premium
+      resources:
+        requests:
+          storage: 1Gi

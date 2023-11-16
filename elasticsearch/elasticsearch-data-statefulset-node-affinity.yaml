@@ -27,11 +27,13 @@ spec:
               - key: kubernetes.io/hostname
                 operator: In
                 values:
-                - aks-nodepool2-24734941-vmss000000     
+                - aks-agentpool2-38968073-vmss000001
       priorityClassName: system-node-critical
+      securityContext:
+        fsGroup: 1000
       containers:
       - name: elasticsearch-data
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.11.0
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.7.0
         env:
         - name: CLUSTER_NAME
           value: elasticsearch
@@ -42,7 +44,7 @@ spec:
         - name: MASTER_NODES
           value: elasticsearch-master
         - name: "ES_JAVA_OPTS"
-          value: "-Xms300m -Xmx300m"
+          value: "-Xms512m -Xmx512m"
         ports:
         - containerPort: 9300
           name: transport
@@ -52,11 +54,18 @@ spec:
           readOnly: true
           subPath: elasticsearch.yml
         - name: elasticsearch-data-persistent-storage
-          mountPath: /data/db
+          mountPath: /usr/share/elasticsearch/data
+        - name: elastic-certificates
+          mountPath: /usr/share/elasticsearch/config/elastic-certificates.p12
+          readOnly: true
+          subPath: elastic-certificates.p12
       volumes:
       - name: config
         configMap:
           name: elasticsearch-data-config
+      - name: elastic-certificates
+        secret:
+          secretName: elastic-certificates-p12
       initContainers:
       - name: increase-vm-max-map
         image: busybox
@@ -70,7 +79,8 @@ spec:
         #volume.beta.kubernetes.io/storage-class: "gp2"
     spec:
       accessModes: [ "ReadWriteOnce" ]
-      # storageClassName: standard
+      #storageClassName: standard
+      #storageClassName: azureblob-nfs-standard #azureblob-nfs-premium
       resources:
         requests:
           storage: 200Gi
