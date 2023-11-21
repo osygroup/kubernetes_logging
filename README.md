@@ -1,11 +1,17 @@
 # How to setup logging on Kubernetes using EFK (Elasticsearch, Fluentd and Kibana)
+The Elasticsearch version used in this repo is version 8.7.0
 
 ## Create a namespace for all the resources needed
 Create a namespace named 'logging' or any name of choice:
 
 kubectl create namespace logging
 
-## Install Elasticsearch (with X-pack security):  
+## Create p12 certificate and install as secret
+Elasticsearch v8 now enforces minimal security (x-pack) by default. 
+If your cluster has multiple nodes, then you must configure TLS between nodes. Production mode clusters will not start if you do not enable TLS.
+My elasticsearch setup has 3 nodes (master, client and data) so it requires basic security.
+
+## Install Elasticsearch:  
 cd into elasticsearch directory  
 
 Setup the ElasticSearch master node:  
