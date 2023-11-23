@@ -22,7 +22,7 @@ Still in the elasticsearch directory, setup the ElasticSearch master node:
 
 kubectl apply -f elasticsearch-master-configmap.yaml \  
 -f elasticsearch-master-service.yaml \  
--f elasticsearch-master-deployment.yaml  
+-f elasticsearch-master-statefulset.yaml  
 
 Setup the ElasticSearch data node:  
 
@@ -33,7 +33,7 @@ kubectl apply -f elasticsearch-data-configmap.yaml \
 Setup the ElasticSearch client node:  
 kubectl apply -f elasticsearch-client-configmap.yaml \  
 -f elasticsearch-client-service.yaml \   
--f elasticsearch-client-deployment.yaml
+-f elasticsearch-client-statefulset.yaml
 
 NOTE: The above k8s deployment and statefulset files are for a single-node cluster. If you deploy this in a multiple-node cluster the master, data, and client pods may end up in different nodes and they will not be able to communicate effectively. Errors such as 'master_not_discovered_exception' may show up.
 
@@ -41,7 +41,7 @@ For multiple-node cluster, use the files suffixed with "-node-affinity". Node af
 
 ### Generate a password and store in a k8s secret:
 
-We have enabled the xpack security module to secure the cluster, now execute the command to initialize the passwords: bin/elasticsearch-setup-passwords within the data node container (any node would work, but I prefer data node, so that the passwords setup will save in its PV?) to generate default users and passwords.  
+We have enabled the xpack security module to secure the cluster, now execute the command to initialize the passwords: bin/elasticsearch-setup-passwords within the data node container to generate default users and passwords.  
 
 To manually create passwords for all the Elasticsearch accounts (including account 'elastic'), run this command in the shell:  
 kubectl exec -it $(kubectl get pods -n logging | grep elasticsearch-data | sed -n 1p | awk '{print $1}') -n logging -- bin/elasticsearch-setup-passwords interactive
