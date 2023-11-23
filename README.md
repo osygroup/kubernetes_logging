@@ -11,12 +11,15 @@ Elasticsearch v8 now enforces minimal security (x-pack) by default.
 If your cluster has multiple nodes, then you must configure TLS between nodes. Production mode clusters will not start if you do not enable TLS.
 My elasticsearch setup has 3 nodes (master, client and data) so it requires basic security.
 
+This [documentation](https://medium.com/@musabdogan/enabling-elasticsearch-xpack-security-on-an-unsecured-cluster-79f6ea4023dd) shows how you can create the p12 certificate with a longer expiry than the default 1095 days:
+You will need to create the certificate on single elastic node and then copy it out. You can run Elasticsearch in a docker container and copy out the certificate. There is a passwordless certificate in the elasticsearch driectory that can be used.
+cd into elasticsearch directory, then deploy the certificate as a secret to the cluster:
+kubectl create secret generic elastic-certificates-p12 -n logging --from-file=elastic-certificates.p12
+
 ## Install Elasticsearch:  
-cd into elasticsearch directory  
+Still in the elasticsearch directory, setup the ElasticSearch master node:  
 
-Setup the ElasticSearch master node:  
-
-kubectl apply  -f elasticsearch-master-configmap.yaml \  
+kubectl apply -f elasticsearch-master-configmap.yaml \  
 -f elasticsearch-master-service.yaml \  
 -f elasticsearch-master-deployment.yaml  
 
@@ -27,7 +30,7 @@ kubectl apply -f elasticsearch-data-configmap.yaml \
 -f elasticsearch-data-statefulset.yaml  
 
 Setup the ElasticSearch client node:  
-kubectl apply  -f elasticsearch-client-configmap.yaml \  
+kubectl apply -f elasticsearch-client-configmap.yaml \  
 -f elasticsearch-client-service.yaml \   
 -f elasticsearch-client-deployment.yaml
 
@@ -82,16 +85,38 @@ kubernetes.labels.app.keyword: "aaasapigatewayinternal"
 You can query for logs, save a query search result and share the result (which saves the search result as a csv file).  
 
 
-## Install Curator:  
-Curator is installed to help automatically delete old Fluentd logs (indices) based on age, using a cronjob. The curator directory is a modified helm chart of the official elasticsearch-curator chart on ArtifactHUB. The modifications were made on the values.yaml file to connect to our elasticsearch stack and delete Fluentd indices (logstash-*_) that are over 7 days old. This is done to manage storage as Fluentd generates logs of logs daily, depending on the amount of pods running in the cluster.
+## Setup Index Lifecycle Management (ILM) to delete old Fluentd logs
 
-Because the daily jobs to delete old indices will not be removed automatically after it runs, we create a new namespace so that the pods that each daily run creates will not be mixed up with our other pods.
+Index Lifecycle Management is set up to help automatically delete old Fluentd/Logstash logs (indices) based on age.
+Login to Kibana and navigate to Management > Dev Tools.
+In the console, copy and run the following scripts:
 
-kubectl create namespace curator
+#### Create a policy (where min_age is the highest age for a log/index):
+PUT _ilm/policy/deleteOldIndices
+{
+  "policy": {
+    "phases": {
+      "hot": {
+        "actions": {}
+      },
+      "delete": {
+        "min_age": "5d",
+        "actions": {
+          "delete": {}
+        }
+      }
+    }
+  }
+}
 
-Install the Curator helm chart:  
+#### Assign new policy to existing logstash indices:
+PUT /logstash-*/_settings?pretty
+{
+  "lifecycle.name": "deleteOldIndices"
+}
 
-helm upgrade --install curator curator -n curator  OR
-helm upgrade --install curator ./curator -n curator 
-
-The cron job will run as per set in the values.yaml file of the chart, deleting the old Fluentd indices.
+#### Create template for logstash indices:
+PUT /_template/logging_policy_template?pretty
+{
+"index_patterns": ["logstash-*"], "settings": { "index.lifecycle.name": "deleteOldIndices" }
+}
