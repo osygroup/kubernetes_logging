@@ -57,7 +57,7 @@ kubectl create secret generic elasticsearch-pw-elastic -n logging --from-literal
 
 cd into the directory kibana and run the following command:  
 
-$ kubectl apply  -f kibana-configmap.yaml \  
+kubectl apply  -f kibana-configmap.yaml \  
 -f kibana-service.yaml \  
 -f kibana-deployment.yaml
 
