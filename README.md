@@ -14,6 +14,7 @@ My elasticsearch setup has 3 nodes (master, client and data) so it requires basi
 This [documentation](https://medium.com/@musabdogan/enabling-elasticsearch-xpack-security-on-an-unsecured-cluster-79f6ea4023dd) shows how you can create the p12 certificate with a longer expiry than the default 1095 days:
 You will need to create the certificate on single elastic node and then copy it out. You can run Elasticsearch in a docker container and copy out the certificate. There is a passwordless certificate in the elasticsearch driectory that can be used.
 cd into elasticsearch directory, then deploy the certificate as a secret to the cluster:
+
 kubectl create secret generic elastic-certificates-p12 -n logging --from-file=elastic-certificates.p12
 
 ## Install Elasticsearch:  
