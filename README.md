@@ -92,7 +92,7 @@ Login to Kibana and navigate to Management > Dev Tools.
 In the console, copy and run the following scripts:
 
 #### Create a policy (where min_age is the highest age for a log/index):
-`
+```
 PUT _ilm/policy/deleteOldIndices
 {
   "policy": {
@@ -109,16 +109,20 @@ PUT _ilm/policy/deleteOldIndices
     }
   }
 }
-`
+```
 
 #### Assign new policy to existing logstash indices:
+```
 PUT /logstash-*/_settings?pretty
 {
   "lifecycle.name": "deleteOldIndices"
 }
+```
 
 #### Create template for logstash indices:
+```
 PUT /_template/logging_policy_template?pretty
 {
 "index_patterns": ["logstash-*"], "settings": { "index.lifecycle.name": "deleteOldIndices" }
 }
+```
