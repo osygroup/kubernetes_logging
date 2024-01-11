@@ -27,7 +27,7 @@ spec:
               - key: kubernetes.io/hostname
                 operator: In
                 values:
-                - aks-agentpool2-38968073-vmss000001
+                - aks-agentpool-86912356-vmss000002
       priorityClassName: system-node-critical
       securityContext:
         fsGroup: 1000

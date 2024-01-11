@@ -87,7 +87,9 @@ Examples of Kibana query (KQL) using pod label:
 kubernetes.labels.app.keyword: "aaasapigatewayinternal" 
 log: "<keyword>" and kubernetes.labels.app.keyword : "aaaspaymentgateway"
 
-You can query for logs, save a query search result and share the result (which saves the search result as a csv file).  
+You can query for logs, save a query search result and share the result (which saves the search result as a csv file).
+
+In Kibana version 8, there is a viewer role that you can assign for read-only accounts.
 
 
 ## Setup Index Lifecycle Management (ILM) to delete old Fluentd logs
