@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: logging
+  name: apm-config
+  labels:
+    app: apm
+data:
+  apm-server.yml: |-
+    apm-server:
+      host: "0.0.0.0:8200"
+
+    queue: {}
+
+    output.elasticsearch:
+      hosts: ["http://elasticsearch-client.logging.svc.cluster.local:9200"]
+      username: "${ELASTICSEARCH_USERNAME}"
+      password: "${ELASTICSEARCH_PASSWORD}"
+      ## If SSL is enabled
+      # protocol: https
+      # ssl.certificate_authorities:
+      #  - /usr/share/apm-server/config/certs/elastic-ca.pem

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: logging
+  name: apm
+  labels:
+    app: apm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apm
+  template:
+    metadata:
+      labels:
+        app: apm
+    spec:
+      containers:
+      - name: apm
+        image: docker.elastic.co/apm/apm-server:8.5.1
+        ports:
+        - containerPort: 8200
+          name: apm
+        env:
+        - name: ELASTICSEARCH_USERNAME
+          value: "elastic"
+        - name: ELASTICSEARCH_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: elasticsearch-pw-elastic
+              key: password
+        volumeMounts:
+        - name: config
+          mountPath: /usr/share/apm-server/apm-server.yml
+          readOnly: true
+          subPath: apm-server.yml
+      volumes:
+      - name: config
+        configMap:
+          name: apm-config
