@@ -53,6 +53,8 @@ Note the elastic user password and add it into a k8s secret like this:
 
 kubectl create secret generic elasticsearch-pw-elastic -n logging --from-literal password=<secret_value_not_base64_value>
 
+This secret containing the password will be used to help Kibana, Fluentd, APM service and any other service that will need to connect to Elasticsearch to authenticate to it. In the Kibana, Fluentd, and APM in this repository, the Elasticsearch username is hard-coded to the appropriate env variable. 
+
 ## Install Kibana:
 
 cd into the directory kibana and run the following command:  
@@ -133,3 +135,21 @@ PUT /_template/logging_policy_template?pretty
 "index_patterns": ["logstash-*"], "settings": { "index.lifecycle.name": "deleteOldIndices" }
 }
 ```
+
+## Install APM:
+
+cd into the directory APM and run the following command:  
+
+kubectl apply  -f apm-configmap.yaml \  
+-f apm-service.yaml \  
+-f apm-deployment.yaml
+
+This [documentation](https://medium.com/@bibinkuruvilla/elk-elasticsearch-logstash-kibana-stack-and-elastic-apm-in-kubernetes-7183d871de4c) shows how to set up integration for APM in Kibana under the section 'Next, set up APM'.
+To install the APM agent on a service to monitor and send performance metrics to the APM server, follow the instructions on Observability > APM page on Kibana.
+
+More useful documents on APM:
+https://www.elastic.co/guide/en/observability/current/traces-get-started.html#traces-get-started
+https://www.elastic.co/guide/en/observability/current/apm-secret-token.html
+https://www.elastic.co/guide/en/observability/current/apm-agent-tls.html
+https://www.elastic.co/guide/en/apm/attacher/current/apm-attacher.html
+https://www.elastic.co/guide/en/observability/current/apm-directory-layout.html#_apm_server_binary_2
