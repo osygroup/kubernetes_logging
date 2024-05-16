@@ -144,7 +144,11 @@ kubectl apply  -f apm-configmap.yaml \
 -f apm-service.yaml \  
 -f apm-deployment.yaml
 
+Use an Ingress to make the APM server accessible publicly if the service to be monitored is not on the same cluster.
+
 This [documentation](https://medium.com/@bibinkuruvilla/elk-elasticsearch-logstash-kibana-stack-and-elastic-apm-in-kubernetes-7183d871de4c) shows how to set up integration for APM in Kibana under the section 'Next, set up APM'.
+In the Server configuration section, you can use apm.logging.svc.cluster.local:8200 for the Host and URL if the service to be monitored is on the same cluster, else use the URL from an ingress.
+
 To install the APM agent on a service to monitor and send performance metrics to the APM server, follow the instructions on Observability > APM page on Kibana.
 
 More useful documents on APM:
