@@ -9,6 +9,9 @@ data:
   kibana.yml: |-
     server.host: 0.0.0.0
 
+    xpack.reporting.csv.maxSizeBytes: 10737418240
+    xpack.reporting.queue.timeout: 120m
+
     elasticsearch:
       hosts: ${ELASTICSEARCH_HOSTS}
       username: ${ELASTICSEARCH_USER}
