@@ -35,7 +35,7 @@ spec:
         - name: MASTER_NODES
           value: elasticsearch-master
         - name: "ES_JAVA_OPTS"
-          value: "-Xms512m -Xmx512m"  #increased from 512m
+          value: "-Xms2048m -Xmx2048m"  #increased from 512m
         ports:
         - containerPort: 9200
           name: client
