@@ -392,5 +392,6 @@ fileConfigs:
         password "#{ENV['FLUENT_ELASTICSEARCH_PASSWORD']}"
         logstash_format true
         logstash_prefix logstash
+        request_timeout 2147483648
       </match>
     </label>
