@@ -88,7 +88,7 @@ Examples of Kibana query (KQL) using pod label e.g:
 
 kubernetes.labels.app.keyword: "aaasapigatewayinternal" 
 
-log: "<keyword>" and kubernetes.labels.app.keyword : "aaaspaymentgateway"
+log: "keyword" and kubernetes.labels.app.keyword : "aaaspaymentgateway"
 
 You can query for logs, save a query search result and share the result (which saves the search result as a csv file).
 
