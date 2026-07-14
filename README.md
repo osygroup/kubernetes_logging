@@ -84,9 +84,10 @@ Create a data view with Index pattern “logstash-*”, select “time” in the
 ![image](https://github.com/osygroup/kubernetes_logging/assets/46828049/940fb9ca-7ace-4f10-8482-a7eb1de604d3)
 
 You can filter logs of pods using namespace, label metadata, container metadata, pod metadata, host(node) etc.
-Examples of Kibana query (KQL) using pod label:
+Examples of Kibana query (KQL) using pod label e.g:
 
 kubernetes.labels.app.keyword: "aaasapigatewayinternal" 
+
 log: "<keyword>" and kubernetes.labels.app.keyword : "aaaspaymentgateway"
 
 You can query for logs, save a query search result and share the result (which saves the search result as a csv file).
